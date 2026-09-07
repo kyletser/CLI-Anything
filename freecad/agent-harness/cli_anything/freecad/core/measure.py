@@ -60,7 +60,7 @@ def _to_world(part: Dict[str, Any], local_point: List[float]) -> List[float]:
     placement = part["placement"]
     return transform_point(
         local_point,
-        list(placement["rotation"]),
+        list(placement.get("rotation", [0.0, 0.0, 0.0])),
         list(placement["position"]),
     )
 

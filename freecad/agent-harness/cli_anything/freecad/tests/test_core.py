@@ -412,11 +412,17 @@ class TestMeasure:
             ("torus", {"radius1": 10.0, "radius2": 3.0}, [2.0, -3.0, 4.0]),
         ],
     )
+    @pytest.mark.parametrize("omit_rotation", [False, True])
     def test_center_of_mass_uses_primitive_local_origin(
-        self, part_type, params, expected
+        self, part_type, params, expected, omit_rotation, tmp_path
     ):
         proj = _make_project()
         add_part(proj, part_type, position=[2.0, -3.0, 4.0], params=params)
+        if omit_rotation:
+            del proj["parts"][0]["placement"]["rotation"]
+            path = str(tmp_path / "missing-rotation.json")
+            save_document(proj, path)
+            proj = open_document(path)
 
         result = measure_center_of_mass(proj, 0)
 
